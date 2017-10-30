@@ -1,9 +1,8 @@
 package main
 
 import (
-	"./log"
-	"errors"
 	"github.com/kariudo/gopushbullet"
+	logger "github.com/lucas59356/go-logger"
 	"time"
 )
 
@@ -15,17 +14,17 @@ var (
 
 func pbRegister() *pushbullet.Client {
 	if *pbKey == "" {
-		logger := log.NewLogger("PUSHBULLET-REGISTER")
+		log := logger.New("PUSHBULLET-REGISTER")
 		cmd.Usage()
-		logger.Panic(errors.New("Chave inválida"))
+		log.Panic("Chave inválida")
 	}
 	return pushbullet.ClientWithKey(*pbKey)
 }
 
 func pbInit() { // Vai rodano o loop
-	logger := log.NewLogger("PUSHBULLET")
-	logger.Info("[!] Iniciando módulo pushbullet")
-	logger.Info("Estou pronto")
+	log := logger.New("PUSHBULLET")
+	log.Info("[!] Iniciando módulo pushbullet")
+	log.Info("Estou pronto")
 	for {
 		time.Sleep(time.Second * 2)
 		go pbFetch()
@@ -33,10 +32,10 @@ func pbInit() { // Vai rodano o loop
 }
 
 func pbFetch() {
-	logger := log.NewLogger("PUSHBULLET-FETCH")
+	log := logger.New("PUSHBULLET-FETCH")
 	pushes, err := pbClient.GetPushHistory(lastPushTime)
 	if err != nil {
-		logger.Error(err.Error())
+		log.Error(err)
 	}
 	for _, push := range pushes {
 		if lastPushTime < push.Created {
@@ -47,8 +46,8 @@ func pbFetch() {
 }
 
 func pbNotify(m pushbullet.PushMessage) {
-	logger := log.NewLogger("PUSHBULLET-NOTIFY")
-	logger.Debug("Enviando " + m.Type + " para notificação.")
+	log := logger.New("PUSHBULLET-NOTIFY")
+	log.Debug("Enviando " + m.Type + " para notificação.")
 	n := gntpNotification{}
 	if m.Title != "" {
 		n.Title = m.Title

@@ -1,7 +1,8 @@
 package main
 
 import (
-	"./log"
+	"errors"
+	logger "github.com/lucas59356/go-logger"
 	"net/http"
 )
 
@@ -11,19 +12,19 @@ var (
 )
 
 func httpInit() {
-	logger := log.NewLogger("HTTP")
+	log := logger.New("HTTP")
 	cmd.Parse(cmd.Args())
-	logger.Info("[!] Iniciando módulo http")
+	log.Info("[!] Iniciando módulo http")
 	mux.HandleFunc("/notify", httpHandleRequest)
-	logger.Debug("[HTTP] Escutando em " + *httpListenOn)
+	log.Debug("[HTTP] Escutando em " + *httpListenOn)
 	err := http.ListenAndServe(*httpListenOn, mux)
 	if err != nil {
-		logger.Panic(err)
+		log.Panic(err.Error())
 	}
 }
 
 func httpHandleRequest(w http.ResponseWriter, req *http.Request) {
-	logger := log.NewLogger("HTTP-HANDLER")
+	log := logger.New("HTTP-HANDLER")
 	req.ParseForm()
 	var text = req.Form.Get("text")
 	var title = req.Form.Get("title")
@@ -34,14 +35,14 @@ func httpHandleRequest(w http.ResponseWriter, req *http.Request) {
 		n.Text = text
 	} else {
 		w.Write([]byte("500 empty text"))
-		logger.Error("Erro na requisição: Text vazio")
+		log.Error(errors.New("Erro na requisição: Text vazio"))
 	}
 
 	if title != "" { // handle do parametro title
 		n.Title = title
 	} else {
 		w.Write([]byte("500 empty title"))
-		logger.Error("Erro na requisição: Title vazio")
+		log.Error(errors.New("Erro na requisição: Title vazio"))
 	}
 
 	switch sticky { // handle do parametro sticky
@@ -61,7 +62,7 @@ func httpHandleRequest(w http.ResponseWriter, req *http.Request) {
 		break
 	default:
 		w.Write([]byte("500 sticky not valid"))
-		logger.Error("Erro na requisição: Sticky inválido")
+		log.Error(errors.New("Erro na requisição: Sticky inválido"))
 	}
 
 	if icon != "" { // handle do parametro sticky

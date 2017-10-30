@@ -1,8 +1,8 @@
 package main
 
 import (
-	"./log"
 	"flag"
+	"github.com/lucas59356/go-logger"
 	"time"
 )
 
@@ -12,8 +12,8 @@ var (
 
 func main() {
 	// Configurando o logger
-	logger := log.NewLogger("CORE")
-	logger.Info("[CORE] Iniciando...")
+	log := logger.New("CORE")
+	log.Info("Iniciando...")
 	cmd.Parse(flag.Args())
 	if cmd.Parsed() {
 		loadPlugins() // Iniciar os plugins

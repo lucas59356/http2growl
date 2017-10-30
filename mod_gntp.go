@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./log"
+	logger "github.com/lucas59356/go-logger"
 	"github.com/mattn/go-gntp"
 )
 
@@ -17,7 +17,7 @@ var (
 
 func gntpInit() {
 	cmd.Parse(cmd.Args())
-	logger := log.NewLogger("GNTP")
+	log := logger.New("GNTP")
 	gntpClient.AppName = "Android"
 	gntpClient.Server = *gntpServer
 	err := gntpClient.Register(
@@ -27,9 +27,9 @@ func gntpInit() {
 			Event:       "android",
 		}})
 	if err != nil {
-		logger.Panic(err)
+		log.Panic(err.Error())
 	} else {
-		logger.Info("Aplicativo registrado no growl com sucesso")
+		log.Info("Aplicativo registrado no growl com sucesso")
 	}
 }
 
@@ -42,7 +42,7 @@ type gntpNotification struct {
 }
 
 func (n gntpNotification) Notify() {
-	logger := log.NewLogger("GNTP")
+	log := logger.New("GNTP")
 	toGNTP := gntp.Message{}
 	toGNTP.DisplayName = gntpDisplayName
 	toGNTP.Event = gntpEvent
@@ -52,8 +52,8 @@ func (n gntpNotification) Notify() {
 	toGNTP.Icon = n.Icon
 	err := gntpClient.Notify(&toGNTP)
 	if err != nil {
-		logger.Error(err.Error())
+		log.Error(err)
 	} else {
-		logger.Info("Uma notificação foi enviada. Título: " + n.Title)
+		log.Info("Uma notificação foi enviada. Título: " + n.Title)
 	}
 }
