@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	logger "github.com/lucas59356/go-logger"
 	"net/http"
 )
@@ -14,7 +13,7 @@ var (
 func httpInit() {
 	log := logger.New("HTTP")
 	cmd.Parse(cmd.Args())
-	log.Info("[!] Iniciando módulo http")
+	log.Info("Iniciando módulo http")
 	mux.HandleFunc("/notify", httpHandleRequest)
 	log.Debug("[HTTP] Escutando em " + *httpListenOn)
 	err := http.ListenAndServe(*httpListenOn, mux)
@@ -35,14 +34,14 @@ func httpHandleRequest(w http.ResponseWriter, req *http.Request) {
 		n.Text = text
 	} else {
 		w.Write([]byte("500 empty text"))
-		log.Error(errors.New("Erro na requisição: Text vazio"))
+		log.ErrorString("Erro na requisição: Text vazio")
 	}
 
 	if title != "" { // handle do parametro title
 		n.Title = title
 	} else {
 		w.Write([]byte("500 empty title"))
-		log.Error(errors.New("Erro na requisição: Title vazio"))
+		log.ErrorString("Erro na requisição: Title vazio")
 	}
 
 	switch sticky { // handle do parametro sticky
@@ -62,7 +61,7 @@ func httpHandleRequest(w http.ResponseWriter, req *http.Request) {
 		break
 	default:
 		w.Write([]byte("500 sticky not valid"))
-		log.Error(errors.New("Erro na requisição: Sticky inválido"))
+		log.ErrorString("Erro na requisição: Sticky inválido")
 	}
 
 	if icon != "" { // handle do parametro sticky
