@@ -3,10 +3,10 @@
 binpath = D:\Programas\bin
 
 build: 
-	go build -i -v main.go mod_gntp.go mod_http.go
+	go build -o main.exe
 
 clean:
-	rm -rf main.exe
+	rm -rf *.exe
 
 win_install: build
 	mv main.exe $(binpath)/http2growl.exe
