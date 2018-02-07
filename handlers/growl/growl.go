@@ -1,4 +1,4 @@
-package growlhandler
+package growl
 
 import (
 	"github.com/lucas59356/http2growl/utils"
@@ -12,9 +12,9 @@ type GNTP struct {
 }
 
 // NewGNTP Creates a new GNTP connection
-func NewGNTP(server string) *GNTP {
+func NewGNTP(appname, server string) *GNTP {
 	client := gntp.NewClient()
-	client.AppName = "http2growl"
+	client.AppName = appname
 	client.Server = server
 	return &GNTP{
 		Client:        client,
