@@ -3,10 +3,16 @@
 binpath = D:\Programas\bin
 
 build: 
-	go build -o main.exe
+	go build
 
 clean:
 	rm -rf *.exe
 
 win_install: build
-	mv main.exe $(binpath)/http2growl.exe
+	mv http2growl.exe $(binpath)/http2growl.exe
+
+install: build
+	install http2growl /usr/bin/
+
+clean:
+	rm http2growl http2growl.exe
